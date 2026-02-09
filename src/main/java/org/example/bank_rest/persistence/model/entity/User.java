@@ -1,0 +1,96 @@
+package org.example.bank_rest.persistence.model.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.example.bank_rest.persistence.model.entity.enums.UserRole;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.*;
+
+
+@Entity
+@Table(name = "users")
+@Setter
+@Getter
+@NoArgsConstructor
+@EqualsAndHashCode(exclude = {"id"})
+@ToString
+public class User implements UserDetails {
+
+    @Id
+    @SequenceGenerator(name = "users_id_seq",
+        sequenceName = "users_id_seq",
+        allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    private Long id;
+
+    @Embedded
+    private TimeData timeData;
+
+    @Column(columnDefinition = "UUID UNIQUE NOT NULL")
+    private UUID uuid = UUID.randomUUID();
+
+    @Column(nullable = false, unique = true, length = 320)
+    @Email
+    @NotNull
+    private String email;
+
+    @Column(nullable = false)
+    @NotNull
+    private String password;
+
+    @Column(nullable = false, name = "first_name", length = 128)
+    @NotNull
+    private String firstName;
+
+    @Column(nullable = false, name = "last_name", length = 128)
+    @NotNull
+    private String lastName;
+
+    @Column(name = "profile_picture", length = 1024)
+    private String profilePicture;
+
+    @Column(name = "role")
+    private UserRole role;
+
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Card> cards = new LinkedHashSet<>();
+
+    @Override
+    @NonNull
+    public String getUsername() {
+        return uuid.toString();
+    }
+
+    @Override
+    @NonNull
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.toString()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+}

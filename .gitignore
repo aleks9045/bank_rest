@@ -1,0 +1,7 @@
+HELP.md
+.gradle
+build/
+**/.env
+**/.idea
+**/logs
+

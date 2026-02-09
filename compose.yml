@@ -1,0 +1,53 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: spring.Dockerfile
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f -s http://localhost:8080/actuator/health || exit 1" ]
+      interval: 60s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks:
+      - default
+
+  database:
+    build:
+      context: database
+      dockerfile: postgres.Dockerfile
+    container_name: bank_database
+    env_file:
+      - database/.env
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./database/logs:/var/log/postgresql
+      - database_data:/var/lib/postgresql/data
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 60s
+      timeout: 3s
+      retries: 2
+      start_period: 5s
+
+volumes:
+  database_data:
+
+
+networks:
+  default:
+    name: default_network
+    driver: bridge
