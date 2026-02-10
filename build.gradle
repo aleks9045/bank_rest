@@ -59,6 +59,8 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
+
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
@@ -76,10 +78,7 @@ tasks.withType(JavaCompile).configureEach {
             '-Amapstruct.suppressGeneratorTimestamp=true',
             '-Amapstruct.defaultInjectionStrategy=field',
             '-Amapstruct.unmappedSourcePolicy=IGNORE',
-            '-Amapstruct.unmappedTargetPolicy=IGNORE',
-            '-Averbose=true',
-            '-AmethodConstraintsSupported=true',
-            '-AdiagnosticKind=ERROR'
+            '-Amapstruct.unmappedTargetPolicy=IGNORE'
     ])
 }
 

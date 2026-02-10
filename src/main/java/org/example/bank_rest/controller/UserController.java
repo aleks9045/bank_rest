@@ -2,28 +2,33 @@ package org.example.bank_rest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest.controller.openapi.UserApi;
-import org.example.bank_rest.dto.UserPatchDto;
-import org.example.bank_rest.dto.UserViewDto;
+import org.example.bank_rest.dto.*;
+import org.example.bank_rest.persistence.model.filter.CardFilter;
 import org.example.bank_rest.persistence.model.filter.UserFilter;
+import org.example.bank_rest.service.card.CardService;
 import org.example.bank_rest.service.user.UserService;
+import org.example.bank_rest.service.user.UserValidator;
 import org.example.bank_rest.util.PageableFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
 
 
-@RestController("api/v1/")
+@RestController
+@RequestMapping(value = "api/v1/")
 @RequiredArgsConstructor
 public class UserController implements UserApi {
 
     private final UserService userService;
+    private final CardService cardService;
+    private final UserValidator userValidator;
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteUser(UUID uuid) {
 
         userService.deleteUserById(uuid);
@@ -32,7 +37,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('DEVELOPER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserViewDto> getUser(UUID uuid) {
 
         var userViewDto = userService.getUser(uuid);
@@ -41,7 +46,34 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('DEVELOPER')")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserViewDto> getMe() {
+
+        var userViewDto = userService.getMe();
+
+        return ResponseEntity.ok(userViewDto);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<CardUserViewDto>> getMyCards(Integer page,
+                                                            Integer size,
+                                                            String sort,
+                                                            CardStatusDto status,
+                                                            CardTypeDto type) {
+
+        var pageable = PageableFactory.getPageable(page, size, sort);
+        var cardFilter = CardFilter.builder()
+            .status(status)
+            .type(type)
+            .build();
+
+        var cards = cardService.getUserCards(cardFilter, pageable);
+        return ResponseEntity.ok(cards);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserViewDto>> getUsers(Integer page, Integer size, String sort, String email, String firstName, String lastName) {
 
         var pageable = PageableFactory.getPageable(page, size, sort);
@@ -52,7 +84,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('DEVELOPER')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserViewDto> patchUser(UUID uuid, UserPatchDto userPatchDto) {
         var userViewDto = userService.patchUser(uuid, userPatchDto);
         return ResponseEntity.ok(userViewDto);

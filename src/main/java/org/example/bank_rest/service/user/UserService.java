@@ -1,18 +1,28 @@
 package org.example.bank_rest.service.user;
 
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.example.bank_rest.dto.CardUserViewDto;
 import org.example.bank_rest.dto.UserCreateDto;
 import org.example.bank_rest.dto.UserPatchDto;
 import org.example.bank_rest.dto.UserViewDto;
 import org.example.bank_rest.mapper.UserMapper;
+import org.example.bank_rest.persistence.model.entity.User;
+import org.example.bank_rest.persistence.model.filter.CardFilter;
 import org.example.bank_rest.persistence.model.filter.UserFilter;
+import org.example.bank_rest.persistence.repository.CardRepository;
 import org.example.bank_rest.persistence.repository.UserRepository;
 import org.example.bank_rest.persistence.specificationBuilder.UserSpecificationBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -25,9 +35,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
+    private final CardRepository cardRepository;
 
     public UserViewDto getUser(UUID uuid) {
         var user = userValidator.getUser(uuid);
+        return userMapper.toDto(user);
+    }
+
+    public UserViewDto getMe() {
+        var user = userValidator.getUserFromSecurityContext();
         return userMapper.toDto(user);
     }
 

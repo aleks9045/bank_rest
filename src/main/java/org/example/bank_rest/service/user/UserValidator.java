@@ -6,6 +6,8 @@ import org.example.bank_rest.exception.enums.NotFoundError;
 import org.example.bank_rest.persistence.model.entity.User;
 import org.example.bank_rest.persistence.repository.UserRepository;
 import org.example.bank_rest.service.validator.impl.EntityLookupValidatorImpl;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -30,5 +32,11 @@ public class UserValidator
     public void checkExistenceByUuid(UUID uuid) {
         userRepository.findByUuid(uuid)
             .orElseThrow(() -> this.notFoundException);
+    }
+
+    public User getUserFromSecurityContext() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) throw new AuthenticationCredentialsNotFoundException("Unauthorized");
+        return (User) authentication.getPrincipal();
     }
 }

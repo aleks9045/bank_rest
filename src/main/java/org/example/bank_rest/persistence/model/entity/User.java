@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Embedded
-    private TimeData timeData;
+    private Timestamps timestamps;
 
     @Column(columnDefinition = "UUID UNIQUE NOT NULL")
     private UUID uuid = UUID.randomUUID();
@@ -52,13 +52,10 @@ public class User implements UserDetails {
     @NotNull
     private String lastName;
 
-    @Column(name = "profile_picture", length = 1024)
-    private String profilePicture;
-
     @Column(name = "role")
     private UserRole role;
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Card> cards = new LinkedHashSet<>();
 
     @Override

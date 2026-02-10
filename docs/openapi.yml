@@ -9,7 +9,8 @@ servers:
 tags:
   - name: Auth
   - name: User
-  - name: Cards
+  - name: Card
+  - name: Transaction
 
 security:
   - accessCookieAuth: [ ]
@@ -154,124 +155,179 @@ paths:
           description: User deleted successfully
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /workspaces:
+  /user/me:
     get:
-      summary: Get list of workspaces
       tags:
-        - Workspace
-      operationId: getWorkspaces
+        - User
+      operationId: getMe
+      responses:
+        '200':
+          description: User data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserView'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /user/cards:
+    get:
+      tags:
+        - User
       parameters:
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/sizeParam'
         - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/uuidParamInQuery'
-          description: Filter by user UUID
-        - name: project_id
+        - name: status
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/id'
-          description: Filter by project ID
-        - name: name
+            $ref: '#/components/schemas/CardStatus'
+          description: Filter by card status
+        - name: type
           in: query
+          required: false
           schema:
-            type: string
-          description: Filter by workspace name (substring match)
+            $ref: '#/components/schemas/CardType'
+          description: Filter by card type
+      operationId: getMyCards
       responses:
         '200':
-          description: List of workspaces retrieved successfully
+          description: User data
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/WorkspaceView'
-        '400':
-          $ref: '#/components/responses/BadRequestError'
+                  $ref: '#/components/schemas/CardUserView'
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /user/{uuid}/workspaces:
-    post:
-      summary: Create a new workspace related with User
+  /cards:
+    get:
+      summary: Get list of cards
       tags:
-        - Workspace
-      operationId: addWorkspace
+        - Card
+      operationId: getCards
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/sizeParam'
+        - $ref: '#/components/parameters/sortParam'
+        - name: user_uuid
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filter by owner user UUID
+        - name: status
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CardStatus'
+          description: Filter by card status
+        - name: type
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CardType'
+          description: Filter by card type
+      responses:
+        '200':
+          description: List of cards retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardAdminView'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
+  /user/{uuid}/cards:
+    post:
+      summary: Create a new card for user
+      tags:
+        - Card
+      operationId: createCard
       parameters:
         - $ref: '#/components/parameters/uuidParamInPath'
-          description: UUID
+          description: User UUID
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WorkspaceCreate'
+              $ref: '#/components/schemas/CardCreate'
       responses:
         '201':
-          description: Workspace created successfully
+          description: Card created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceView'
+                $ref: '#/components/schemas/CardAdminView'
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /workspace/{id}:
+
+  /card/{id}:
     get:
-      summary: Get workspace by ID
+      summary: Get card by ID
       tags:
-        - Workspace
-      operationId: getWorkspace
+        - Card
+      operationId: getCard
       parameters:
         - $ref: '#/components/parameters/idParamInPath'
-          description: Workspace ID
+          description: Card ID
       responses:
         '200':
-          description: Workspace data
+          description: Card data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceView'
+                $ref: '#/components/schemas/CardAdminView'
         '404':
           $ref: '#/components/responses/NotFoundError'
+
     patch:
-      summary: Patch workspace by ID
+      summary: Patch card by ID
       tags:
-        - Workspace
-      operationId: patchWorkspace
+        - Card
+      operationId: patchCard
       parameters:
         - $ref: '#/components/parameters/idParamInPath'
-          description: Workspace ID
+          description: Card ID
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WorkspacePatch'
+              $ref: '#/components/schemas/CardPatch'
       responses:
         '200':
-          description: Workspace patched successfully
+          description: Card patched successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WorkspaceView'
+                $ref: '#/components/schemas/CardAdminView'
         '400':
           $ref: '#/components/responses/BadRequestError'
         '404':
           $ref: '#/components/responses/NotFoundError'
+
     delete:
-      summary: Delete workspace by ID
+      summary: Delete card by ID
       tags:
-        - Workspace
-      operationId: deleteWorkspace
+        - Card
+      operationId: deleteCard
       parameters:
         - $ref: '#/components/parameters/idParamInPath'
-          description: Workspace ID
+          description: Card ID
       responses:
         '204':
-          description: Workspace deleted successfully
+          description: Card deleted successfully
         '404':
           $ref: '#/components/responses/NotFoundError'
+
 
 components:
   securitySchemes:
@@ -501,38 +557,86 @@ components:
           type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
 
-    WorkspaceBase:
+    CardBase:
       type: object
       properties:
-        name:
-          type: string
-          maxLength: 128
-          description: Name of the workspace
-          example: Development Team
-        description:
-          type: string
-          maxLength: 1024
-          description: Description of the workspace
-          example: Workspace for the backend development team
-    WorkspaceCreate:
+        balance:
+          type: number
+          format: decimal
+          minimum: 0
+          example: 1500.75
+          description: Card balance
+        status:
+          $ref: '#/components/schemas/CardStatus'
+        type:
+          $ref: '#/components/schemas/CardType'
+        last4:
+          type: integer
+          minimum: 1000
+          maximum: 9999
+          example: 1234
+          description: Last 4 digits of card number
+        expiryMonth:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 12
+        expiryYear:
+          type: integer
+          minimum: 0
+          example: 2028
+    CardCreate:
       allOf:
-        - $ref: '#/components/schemas/WorkspaceBase'
+        - $ref: '#/components/schemas/CardBase'
         - type: object
           required:
-            - name
+            - type
+            - expiryMonth
+            - expiryYear
           properties:
-            name:
-              $ref: '#/components/schemas/WorkspaceBase/properties/name'
-    WorkspaceView:
+            type:
+              $ref: '#/components/schemas/CardBase/properties/type'
+            expiryMonth:
+              $ref: '#/components/schemas/CardBase/properties/expiryMonth'
+            expiryYear:
+              $ref: '#/components/schemas/CardBase/properties/expiryYear'
+    CardAdminView:
       allOf:
         - $ref: '#/components/schemas/TimeData'
-        - $ref: '#/components/schemas/WorkspaceBase'
+        - $ref: '#/components/schemas/CardBase'
         - type: object
-    WorkspacePatch:
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+            owner:
+              $ref: '#/components/schemas/UserView'
+    CardUserView:
       allOf:
-        - $ref: '#/components/schemas/WorkspaceBase'
+        - $ref: '#/components/schemas/TimeData'
+        - $ref: '#/components/schemas/CardBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/id'
+    CardPatch:
+      allOf:
+        - $ref: '#/components/schemas/CardBase'
         - type: object
           description: All fields optional for partial update
+
+    CardStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - BLOCKED
+        - EXPIRED
+
+    CardType:
+      type: string
+      enum:
+        - VISA
+        - MASTERCARD
+        - MIR
 
     id:
       type: integer

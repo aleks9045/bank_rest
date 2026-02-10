@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EntityListeners;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.example.bank_rest.persistence.model.listener.TimeDataListener;
+import org.example.bank_rest.persistence.model.listener.TimestampsListener;
 
 import java.time.OffsetDateTime;
 
@@ -14,9 +14,9 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-@EntityListeners(TimeDataListener.class)
+@EntityListeners(TimestampsListener.class)
 @Embeddable
-public class TimeData {
+public class Timestamps {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @NotNull
