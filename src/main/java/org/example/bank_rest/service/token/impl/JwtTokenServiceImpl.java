@@ -1,10 +1,10 @@
-package org.example.bank_rest.security.service.token.impl;
+package org.example.bank_rest.service.token.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import org.example.bank_rest.security.service.token.JwtTokenService;
-import org.example.bank_rest.security.service.token.enums.JwtTokenType;
+import org.example.bank_rest.service.token.JwtTokenService;
+import org.example.bank_rest.service.token.enums.JwtTokenType;
 import org.example.bank_rest.util.SaveCast;
 
 import javax.crypto.SecretKey;

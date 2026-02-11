@@ -45,9 +45,16 @@ public class CardController implements CardApi {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CardAdminViewDto> createCard(UUID uuid, CardCreateDto cardCreateDto) {
 
-        var cardViewDto = cardService.saveCard(cardCreateDto);
+        var cardViewDto = cardService.saveCard(uuid, cardCreateDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cardViewDto);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Object> getCardPan(Long id) {
+        var pan = cardService.getDecryptedPan(id);
+        return ResponseEntity.ok(pan);
     }
 
     @Override
@@ -56,11 +63,10 @@ public class CardController implements CardApi {
                                                            Integer size,
                                                            String sort,
                                                            UUID userUuid,
-                                                           CardStatusDto status,
-                                                           CardTypeDto type) {
+                                                           CardStatusDto status) {
 
         var pageable = PageableFactory.getPageable(page, size, sort);
-        var cardFilter = new CardFilter(userUuid, status, type);
+        var cardFilter = new CardFilter(userUuid, status);
 
         var cards = cardService.getCards(cardFilter, pageable);
         return ResponseEntity.ok(cards);

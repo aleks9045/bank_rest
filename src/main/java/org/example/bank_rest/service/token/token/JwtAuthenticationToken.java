@@ -1,4 +1,4 @@
-package org.example.bank_rest.security.service.token.token;
+package org.example.bank_rest.service.token.token;
 
 
 import org.example.bank_rest.persistence.model.entity.User;

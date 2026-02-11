@@ -19,13 +19,12 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping(value = "api/v1/")
+@RequestMapping(value = "api/v1")
 @RequiredArgsConstructor
 public class UserController implements UserApi {
 
     private final UserService userService;
     private final CardService cardService;
-    private final UserValidator userValidator;
 
     @Override
     @PreAuthorize("hasRole('USER')")
@@ -59,13 +58,11 @@ public class UserController implements UserApi {
     public ResponseEntity<List<CardUserViewDto>> getMyCards(Integer page,
                                                             Integer size,
                                                             String sort,
-                                                            CardStatusDto status,
-                                                            CardTypeDto type) {
+                                                            CardStatusDto status) {
 
         var pageable = PageableFactory.getPageable(page, size, sort);
         var cardFilter = CardFilter.builder()
             .status(status)
-            .type(type)
             .build();
 
         var cards = cardService.getUserCards(cardFilter, pageable);

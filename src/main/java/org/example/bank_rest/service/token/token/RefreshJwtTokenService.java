@@ -1,8 +1,8 @@
-package org.example.bank_rest.security.service.token.token;
+package org.example.bank_rest.service.token.token;
 
 import org.example.bank_rest.properties.JwtProperties;
-import org.example.bank_rest.security.service.token.enums.JwtTokenType;
-import org.example.bank_rest.security.service.token.impl.JwtTokenServiceImpl;
+import org.example.bank_rest.service.token.enums.JwtTokenType;
+import org.example.bank_rest.service.token.impl.JwtTokenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

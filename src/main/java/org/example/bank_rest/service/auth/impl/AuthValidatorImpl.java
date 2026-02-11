@@ -1,4 +1,4 @@
-package org.example.bank_rest.security.service.auth.impl;
+package org.example.bank_rest.service.auth.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest.dto.UserCreateDto;
@@ -7,7 +7,7 @@ import org.example.bank_rest.exception.RequestException;
 import org.example.bank_rest.exception.enums.AuthError;
 import org.example.bank_rest.persistence.model.entity.User;
 import org.example.bank_rest.persistence.repository.UserRepository;
-import org.example.bank_rest.security.service.auth.AuthValidator;
+import org.example.bank_rest.service.auth.AuthValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

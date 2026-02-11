@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.bank_rest.dto.CardStatusDto;
-import org.example.bank_rest.dto.CardTypeDto;
 
 import java.util.UUID;
 
@@ -17,5 +16,4 @@ import java.util.UUID;
 public class CardFilter {
     private UUID userUuid;
     private CardStatusDto status;
-    private CardTypeDto type;
 }

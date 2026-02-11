@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id 'org.springframework.boot' version '4.0.0'
-    id 'io.spring.dependency-management' version '1.1.3'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openapi.generator' version '7.16.0'
     id 'org.liquibase.gradle' version '3.0.2'
     id 'java'
@@ -26,9 +26,8 @@ ext {
     mapstructVersion = '1.6.3'
     lombokVersion = '1.18.42'
     lombokMapstructBindingVersion = '0.2.0'
-    springDocsVersion = '2.8.13'
-    hibernateProcessorVersion = '7.0.10.Final'
-    springCloudVersion = '2025.1.0'
+    springDocsVersion = '3.0.1'
+    hibernateProcessorVersion = '7.2.4.Final'
 }
 
 dependencies {
@@ -38,13 +37,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
 
     // Springdoc OpenAPI
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocsVersion}"
 
     // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
+
+    // Liquibase
+    implementation 'org.liquibase:liquibase-core:5.0.0'
 
     // Hibernate Processor
     compileOnly "org.hibernate.orm:hibernate-processor:${hibernateProcessorVersion}"
@@ -59,8 +60,9 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
+    // Encrypting
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.83'
 
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
@@ -68,6 +70,7 @@ dependencies {
 
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
@@ -105,11 +108,18 @@ openApiGenerate {
             openApiNullable         : 'false'
     ]
 }
-
 sourceSets {
     main {
         java {
             srcDir "$buildDir/generated-sources/openapi/src/main/java"
         }
     }
+}
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('openApiGenerate')
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

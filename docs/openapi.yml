@@ -58,7 +58,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFoundError'
   /auth/logout:
-    get:
+    post:
       tags:
         - Auth
       operationId: logout
@@ -183,12 +183,6 @@ paths:
           schema:
             $ref: '#/components/schemas/CardStatus'
           description: Filter by card status
-        - name: type
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/CardType'
-          description: Filter by card type
       operationId: getMyCards
       responses:
         '200':
@@ -224,12 +218,6 @@ paths:
           schema:
             $ref: '#/components/schemas/CardStatus'
           description: Filter by card status
-        - name: type
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/CardType'
-          description: Filter by card type
       responses:
         '200':
           description: List of cards retrieved successfully
@@ -269,6 +257,27 @@ paths:
         '404':
           $ref: '#/components/responses/NotFoundError'
 
+  /card/{id}/pan:
+    get:
+      summary: Get decrypted pan of card by ID
+      tags:
+        - Card
+      operationId: getCardPan
+      parameters:
+        - $ref: '#/components/parameters/idParamInPath'
+          description: Card ID
+      responses:
+        '200':
+          description: Card data
+          content:
+            application/json:
+              schema:
+                pan:
+                  type: string
+                  example: 1234567812345678
+                  length: 16
+        '404':
+          $ref: '#/components/responses/NotFoundError'
   /card/{id}:
     get:
       summary: Get card by ID
@@ -447,8 +456,8 @@ components:
     TimeData:
       type: object
       required:
-        - createdAt
-        - updatedAt
+        - created_at
+        - updated_at
       properties:
         created_at:
           type: string
@@ -494,11 +503,8 @@ components:
           format: password
           example: StrongPassword123!
           pattern: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRole'
-          uniqueItems: true
+        role:
+          $ref: '#/components/schemas/UserRole'
     UserPatch:
       type: object
       properties:
@@ -568,8 +574,6 @@ components:
           description: Card balance
         status:
           $ref: '#/components/schemas/CardStatus'
-        type:
-          $ref: '#/components/schemas/CardType'
         last4:
           type: integer
           minimum: 1000
@@ -594,8 +598,6 @@ components:
             - expiryMonth
             - expiryYear
           properties:
-            type:
-              $ref: '#/components/schemas/CardBase/properties/type'
             expiryMonth:
               $ref: '#/components/schemas/CardBase/properties/expiryMonth'
             expiryYear:
@@ -630,13 +632,6 @@ components:
         - ACTIVE
         - BLOCKED
         - EXPIRED
-
-    CardType:
-      type: string
-      enum:
-        - VISA
-        - MASTERCARD
-        - MIR
 
     id:
       type: integer

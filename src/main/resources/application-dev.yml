@@ -48,17 +48,4 @@ cors:
   allowed-headers: ${CORS_ALLOWED_HEADERS:*}
   allow-credentials: ${CORS_ALLOW_CREDENTIALS:false}
 
-
-app:
-  base-url: "http://localhost/api/v1"
-  admin-uuid: "de40eacb-7f13-4165-ba80-cf7a65f2e490"
-  files:
-    upload-path: "/app/static/uploads/"
-  email:
-    from: "no-reply@exapmle.com"
-  template:
-    email-verification: "email-verification"
-    notification: "notification"
-    remind: "remind"
-  telegram-service:
-    url: "localhost:8001"
+card_encryption-key: sdWbynRKwRL3pGRSm9vSoZo8JiuXBmJh

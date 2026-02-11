@@ -6,7 +6,7 @@ import org.example.bank_rest.controller.openapi.AuthApi;
 import org.example.bank_rest.dto.UserCreateDto;
 import org.example.bank_rest.dto.UserLoginDto;
 import org.example.bank_rest.dto.UserViewDto;
-import org.example.bank_rest.security.service.auth.AuthService;
+import org.example.bank_rest.service.auth.AuthService;
 import org.example.bank_rest.util.JwtCookieManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "api/v1/")
+@RequestMapping(value = "/api/v1")
 @RequiredArgsConstructor
 public class AuthController implements AuthApi {
 

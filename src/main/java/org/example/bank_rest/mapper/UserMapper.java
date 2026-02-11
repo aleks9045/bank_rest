@@ -11,6 +11,7 @@ import org.mapstruct.*;
 @Mapper(uses = {UserRoleMapper.class})
 public interface UserMapper {
 
+
     User toEntity(UserCreateDto dto);
 
     UserViewDto toDto(User dto);

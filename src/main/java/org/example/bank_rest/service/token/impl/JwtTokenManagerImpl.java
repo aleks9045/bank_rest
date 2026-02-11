@@ -1,10 +1,10 @@
-package org.example.bank_rest.security.service.token.impl;
+package org.example.bank_rest.service.token.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bank_rest.security.service.token.JwtTokenManager;
-import org.example.bank_rest.security.service.token.enums.JwtTokenType;
-import org.example.bank_rest.security.service.token.token.AccessJwtTokenService;
-import org.example.bank_rest.security.service.token.token.RefreshJwtTokenService;
+import org.example.bank_rest.service.token.JwtTokenManager;
+import org.example.bank_rest.service.token.enums.JwtTokenType;
+import org.example.bank_rest.service.token.token.AccessJwtTokenService;
+import org.example.bank_rest.service.token.token.RefreshJwtTokenService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;

@@ -10,12 +10,13 @@ import org.example.bank_rest.persistence.model.filter.CardFilter;
 import org.example.bank_rest.persistence.repository.CardRepository;
 import org.example.bank_rest.persistence.specificationBuilder.CardSpecificationBuilder;
 import org.example.bank_rest.service.user.UserValidator;
+import org.example.bank_rest.util.CardPanGenerator;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+import java.util.UUID;
 
 
 @Service
@@ -27,6 +28,7 @@ public class CardService {
     private final CardMapper cardMapper;
     private final CardValidator cardValidator;
     private final UserValidator userValidator;
+    private final CardEncryptor cardEncryptor;
 
     @Transactional(readOnly = true)
     public List<CardAdminViewDto> getCards(CardFilter filter, Pageable pageable) {
@@ -36,6 +38,12 @@ public class CardService {
         var page = cardRepository.findAll(spec, pageable);
 
         return page.stream().map(cardMapper::toAdminDto).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public String getDecryptedPan(Long id) {
+        var card = cardValidator.getCard(id);
+        return cardEncryptor.decrypt(card.getEncryptedPan());
     }
 
     @Transactional(readOnly = true)
@@ -50,15 +58,22 @@ public class CardService {
     }
 
     public CardAdminViewDto getCard(Long id) {
-
         var card = cardValidator.getCard(id);
-
         return cardMapper.toAdminDto(card);
     }
 
     @Transactional
-    public CardAdminViewDto saveCard(CardCreateDto cardCreateDto) {
+    public CardAdminViewDto saveCard(UUID uuid, CardCreateDto cardCreateDto) {
+        var pan = CardPanGenerator.generatePan();
+        var last4 = pan.substring(pan.length() - 4);
+        var encryptedPan = cardEncryptor.encrypt(pan);
+
         var card = cardMapper.toEntity(cardCreateDto);
+        card.setEncryptedPan(encryptedPan);
+        card.setLast4(last4);
+
+        var owner = userValidator.getUser(uuid);
+        card.setOwner(owner);
 
         var savedCard = cardRepository.save(card);
         return cardMapper.toAdminDto(savedCard);

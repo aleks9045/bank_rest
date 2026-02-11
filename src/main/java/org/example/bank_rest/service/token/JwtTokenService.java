@@ -1,8 +1,8 @@
-package org.example.bank_rest.security.service.token;
+package org.example.bank_rest.service.token;
 
 
 import io.jsonwebtoken.Claims;
-import org.example.bank_rest.security.service.token.enums.JwtTokenType;
+import org.example.bank_rest.service.token.enums.JwtTokenType;
 
 import java.util.List;
 import java.util.Map;

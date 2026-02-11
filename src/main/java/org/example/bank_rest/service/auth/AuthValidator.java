@@ -1,4 +1,4 @@
-package org.example.bank_rest.security.service.auth;
+package org.example.bank_rest.service.auth;
 
 
 import org.example.bank_rest.dto.UserCreateDto;

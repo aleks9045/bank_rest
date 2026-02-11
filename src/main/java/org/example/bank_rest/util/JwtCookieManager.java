@@ -2,7 +2,7 @@ package org.example.bank_rest.util;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest.properties.JwtProperties;
-import org.example.bank_rest.security.service.token.enums.JwtTokenType;
+import org.example.bank_rest.service.token.enums.JwtTokenType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;

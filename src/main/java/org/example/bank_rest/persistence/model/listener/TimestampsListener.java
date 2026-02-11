@@ -3,7 +3,7 @@ package org.example.bank_rest.persistence.model.listener;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import org.example.bank_rest.persistence.model.entity.Timestamps;
+import org.example.bank_rest.persistence.model.entity.HasTimestamps;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -13,14 +13,14 @@ import java.time.OffsetDateTime;
 public class TimestampsListener {
 
     @PrePersist
-    protected void onCreate(Timestamps timestamps) {
+    public void prePersist(HasTimestamps entity) {
         var now = OffsetDateTime.now();
-        timestamps.setCreatedAt(now);
-        timestamps.setUpdatedAt(now);
+        entity.setCreatedAt(now);
+        entity.setUpdatedAt(now);
     }
 
     @PreUpdate
-    protected void onUpdate(Timestamps timestamps) {
-        timestamps.setUpdatedAt(OffsetDateTime.now());
+    public void preUpdate(HasTimestamps entity) {
+        entity.setUpdatedAt(OffsetDateTime.now());
     }
 }
