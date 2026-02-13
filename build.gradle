@@ -11,7 +11,7 @@ plugins {
     id 'org.springframework.boot' version '4.0.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openapi.generator' version '7.16.0'
-    id 'org.liquibase.gradle' version '3.0.2'
+    id 'org.liquibase.gradle' version '3.1.0'
     id 'java'
 }
 
@@ -37,15 +37,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
 
     // Springdoc OpenAPI
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocsVersion}"
 
     // PostgreSQL
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly "org.postgresql:postgresql"
 
     // Liquibase
-    implementation 'org.liquibase:liquibase-core:5.0.0'
+    liquibaseRuntime 'org.liquibase:liquibase-core:5.0.0'
+    liquibaseRuntime 'org.postgresql:postgresql'
+    liquibaseRuntime 'info.picocli:picocli:4.7.5'
 
     // Hibernate Processor
     compileOnly "org.hibernate.orm:hibernate-processor:${hibernateProcessorVersion}"
@@ -72,6 +75,19 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+liquibase {
+    activities {
+        main {
+            outputFile("src/main/resources/db/changelog/db.changelog-base.xml")
+            url('jdbc:postgresql://localhost:5432/postgres')
+            username('postgres')
+            password('password')
+            driver("org.postgresql.Driver")
+        }
+        runList("main")
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {

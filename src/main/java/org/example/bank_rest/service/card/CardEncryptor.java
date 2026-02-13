@@ -18,7 +18,7 @@ public class CardEncryptor {
     @Value("${card_encryption-key}")
     private String encryptionKey;
 
-    private static final String ALGORITHM = "CardEncryptor/GCM/NoPadding";
+    private static final String ALGORITHM = "AES/GCM/NoPadding";
     private static final String KEY_ALGORITHM = "CardEncryptor";
     private static final int TAG_LENGTH = 128;
     private static final int IV_LENGTH = 12;

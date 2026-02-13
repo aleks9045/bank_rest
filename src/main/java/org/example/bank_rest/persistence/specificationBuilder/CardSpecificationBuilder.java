@@ -1,5 +1,6 @@
 package org.example.bank_rest.persistence.specificationBuilder;
 
+import jakarta.persistence.criteria.JoinType;
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest.persistence.model.entity.Card;
 import org.example.bank_rest.persistence.model.entity.Card_;
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CardSpecificationBuilder extends JpaSpecificationBuilder<User> {
+public class CardSpecificationBuilder extends JpaSpecificationBuilder<Card> {
 
     public Specification<Card> build(CardFilter filter) {
 
-        return Specification.<Card>unrestricted();
+        return Specification.<Card>unrestricted()
+            .and(this.joinEqual(Card_.OWNER, JoinType.INNER, User_.UUID, filter.getUserUuid()))
+            .and(this.equal(Card_.STATUS, filter.getStatus()));
     }
 
 }

@@ -36,37 +36,12 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // Idk USER ot ADMIN
     public ResponseEntity<UserViewDto> getUser(UUID uuid) {
 
         var userViewDto = userService.getUser(uuid);
 
         return ResponseEntity.ok(userViewDto);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<UserViewDto> getMe() {
-
-        var userViewDto = userService.getMe();
-
-        return ResponseEntity.ok(userViewDto);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<CardUserViewDto>> getMyCards(Integer page,
-                                                            Integer size,
-                                                            String sort,
-                                                            CardStatusDto status) {
-
-        var pageable = PageableFactory.getPageable(page, size, sort);
-        var cardFilter = CardFilter.builder()
-            .status(status)
-            .build();
-
-        var cards = cardService.getUserCards(cardFilter, pageable);
-        return ResponseEntity.ok(cards);
     }
 
     @Override

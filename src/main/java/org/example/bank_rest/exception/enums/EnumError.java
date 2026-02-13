@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * Interface that unite all error enumerations
  *
  * @see BadRequestError Example of implementation
- * @author Aleksey
+
  */
 public interface EnumError {
 

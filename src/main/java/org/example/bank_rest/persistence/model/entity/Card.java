@@ -14,6 +14,12 @@ import java.util.List;
 @Entity
 @EntityListeners(TimestampsListener.class)
 @Table(name = "cards")
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "withOwner",
+        attributeNodes = @NamedAttributeNode("owner")
+    )
+})
 @Setter
 @Getter
 @NoArgsConstructor
@@ -30,29 +36,33 @@ public class Card implements HasTimestamps{
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id",
-    nullable = false,
-        foreignKey = @ForeignKey(name = "fk_cards_users"))
+                nullable = false,
+                foreignKey = @ForeignKey(name = "fk_cards_users"))
     private User owner;
 
-    @Column(name = "balance", scale = 12, precision = 2)
+    @Column(name = "balance", precision = 12, scale = 2, nullable = false)
     @Min(0)
     private BigDecimal balance = BigDecimal.valueOf(0);
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private CardStatus status = CardStatus.ACTIVE;
 
-    @Column(name = "last4", length = 4)
+    @Column(name = "wished_status")
+    @Enumerated(EnumType.ORDINAL)
+    private CardStatus wishedStatus;
+
+    @Column(name = "last4", length = 4, nullable = false)
     private String last4;
 
-    @Column(name = "encrypted_pan")
+    @Column(name = "encrypted_pan", nullable = false)
     private String encryptedPan;
 
-    @Column(name = "expiry_month", precision = 2)
+    @Column(name = "expiry_month", precision = 2, nullable = false)
     @Min(1) @Max(12)
     private Integer expiryMonth;
 
-    @Column(name = "expiry_year", precision = 4)
+    @Column(name = "expiry_year", precision = 4, nullable = false)
     @Min(0)
     private Integer expiryYear;
 
@@ -62,9 +72,9 @@ public class Card implements HasTimestamps{
     @OneToMany(mappedBy = "toCard")
     private List<Transaction> received;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 }

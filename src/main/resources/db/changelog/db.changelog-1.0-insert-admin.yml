@@ -25,6 +25,9 @@ databaseChangeLog:
                   name: password
                   value: "$100801$C6nmCSrdWqVX0vQho/lZow==$RT9f7C7TeEL0L7r29A3jU/bZQOBZJ2BtAmYjN26Qmb0="
               - column:
+                  name: role
+                  value: "1"
+              - column:
                   name: created_at
                   valueComputed: "CURRENT_TIMESTAMP"
               - column:

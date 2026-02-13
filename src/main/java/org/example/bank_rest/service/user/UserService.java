@@ -42,10 +42,6 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public UserViewDto getMe() {
-        var user = userValidator.getUserFromSecurityContext();
-        return userMapper.toDto(user);
-    }
 
     @Transactional(readOnly = true)
     public List<UserViewDto> getUsers(UserFilter filter, Pageable pageable) {

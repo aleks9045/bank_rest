@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
  * <p> Stores error message and http status code of error<br>
  * In constructor accepts {@link EnumError}
  *
- * @author Aleksey
+
  */
 @Getter
 public class RequestException extends RuntimeException {
@@ -18,6 +18,11 @@ public class RequestException extends RuntimeException {
 
     public RequestException(EnumError enumError, Object... args) {
         super(enumError.format(args));
+        this.httpStatus = enumError.getHttpStatus();
+    }
+
+    public RequestException(EnumError enumError) {
+        super(enumError.getMessage());
         this.httpStatus = enumError.getHttpStatus();
     }
 }

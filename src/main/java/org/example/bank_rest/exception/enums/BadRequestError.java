@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 /**
  * Enumeration for every error with "Bad request" status
  *
- * @author Aleksey
+
  */
 @Getter
 @RequiredArgsConstructor
 public enum BadRequestError implements EnumError {
-    BAD_REQUEST_ERROR("Ошибка с сущностью %s. %s.");
+    BAD_REQUEST_ERROR("Плохой запрос.");
 
     private final String message;
     private final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;

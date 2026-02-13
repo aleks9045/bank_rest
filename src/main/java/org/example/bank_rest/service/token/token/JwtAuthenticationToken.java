@@ -10,7 +10,7 @@ import java.util.Collection;
 
 /**
  * Uses for SecurityContext
- * @author Aleksey
+
  */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 

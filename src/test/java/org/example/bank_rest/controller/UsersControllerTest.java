@@ -6,6 +6,7 @@ import org.example.bank_rest.dto.UserRoleDto;
 import org.example.bank_rest.dto.UserViewDto;
 import org.example.bank_rest.security.filter.CustomAuthFilter;
 import org.example.bank_rest.service.card.CardService;
+import org.example.bank_rest.service.me.MeService;
 import org.example.bank_rest.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ class UsersControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
+    private MeService meService;
+    @MockitoBean
     private UserService userService;
 
     @MockitoBean
@@ -46,6 +49,7 @@ class UsersControllerTest {
     private static final String BASE_URL = "/api/v1/user/";
 
     private static final UUID UUID_VALUE = UUID.randomUUID();
+
 
     @Test
     void deleteUser_shouldReturn204() throws Exception {
@@ -86,13 +90,13 @@ class UsersControllerTest {
         userView.setEmail("me@mail.com");
         userView.setFirstName("me");
 
-        when(userService.getMe()).thenReturn(userView);
+        when(meService.getMe()).thenReturn(userView);
 
         mockMvc.perform(get(BASE_URL + "me"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.email").value("me@mail.com"));
 
-        verify(userService).getMe();
+        verify(meService).getMe();
     }
 
 

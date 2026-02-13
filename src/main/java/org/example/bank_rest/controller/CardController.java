@@ -58,7 +58,7 @@ public class CardController implements CardApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CardAdminViewDto>> getCards(Integer page,
                                                            Integer size,
                                                            String sort,

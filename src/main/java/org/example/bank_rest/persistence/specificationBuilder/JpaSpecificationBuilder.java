@@ -5,11 +5,13 @@ import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Builds {@link Specification} object using lambda function and criteria builder
- * @author Aleksey
+
  */
 public class JpaSpecificationBuilder<T> {
 
@@ -69,10 +71,11 @@ public class JpaSpecificationBuilder<T> {
                                             Object value) {
         if (value == null) return Specification.unrestricted();
         return (root, query, criteriaBuilder) -> {
-            Join<?, ?> currentJoin = root.join(joinFields.getFirst());
-            joinFields.removeFirst();
+            var mutableJoinFields = new ArrayList<>(joinFields);
+            Join<?, ?> currentJoin = root.join(mutableJoinFields.getFirst());
+            mutableJoinFields.removeFirst();
 
-            for (String joinField : joinFields) {
+            for (String joinField : mutableJoinFields) {
                 currentJoin = currentJoin.join(joinField, JoinType.INNER);
             }
 

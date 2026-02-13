@@ -15,10 +15,8 @@ import java.time.OffsetDateTime;
 /**
  * Authorization exception handler<br>
  * Handles AccessDeniedException and AuthenticationException that throws by spring security<br><br>
- *
+ * <p>
  * Generates standardized responses using {@link ApiErrorDto}
- *
- * @author Aleksey
  */
 @RestControllerAdvice
 public class AuthExceptionHandler {

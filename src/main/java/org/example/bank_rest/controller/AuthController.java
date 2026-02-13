@@ -40,7 +40,7 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("isAnonymous() || hasRole('ADMIN')")
     public ResponseEntity<UserViewDto> register(UserCreateDto userCreateDto) {
         var savedUser = authService.saveUser(userCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);

@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import java.time.OffsetDateTime;
 
 public class ApiError {
-    public static ApiErrorDto buildApiErrorDto(HttpStatus httpStatus, Exception ex, HttpServletRequest request) {
+    public static ApiErrorDto buildApiErrorDto(HttpStatus httpStatus,
+                                               Exception ex,
+                                               HttpServletRequest request) {
         return new ApiErrorDto(
             httpStatus.value(),
             httpStatus.getReasonPhrase(),

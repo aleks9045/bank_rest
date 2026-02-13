@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * Authenticate and Authorize Service
  *
- * @author Aleksey
+
  */
 @Component
 @RequiredArgsConstructor

@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Stores two objects for separation and unification methods
- * @author Aleksey
+
  */
 @Component
 @RequiredArgsConstructor

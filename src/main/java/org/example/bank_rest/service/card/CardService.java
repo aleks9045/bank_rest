@@ -57,8 +57,9 @@ public class CardService {
         return page.stream().map(cardMapper::toUserDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public CardAdminViewDto getCard(Long id) {
-        var card = cardValidator.getCard(id);
+        var card = cardValidator.getCardWithOwner(id);
         return cardMapper.toAdminDto(card);
     }
 
@@ -82,9 +83,7 @@ public class CardService {
     @Transactional
     public CardAdminViewDto patchCard(Long id, CardPatchDto cardPatchDto) {
         var card = cardValidator.getCard(id);
-
         cardMapper.patchEntity(cardPatchDto, card);
-
         return cardMapper.toAdminDto(card);
     }
 

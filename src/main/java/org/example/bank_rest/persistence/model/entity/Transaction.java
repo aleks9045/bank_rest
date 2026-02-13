@@ -18,6 +18,7 @@ public class Transaction {
     @SequenceGenerator(name = "transactions_id_seq",
         sequenceName = "transactions_id_seq",
         allocationSize = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transactions_id_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,7 +35,7 @@ public class Transaction {
     )
     private Card toCard;
 
-    @Column(name = "amount", precision = 12, scale = 2)
+    @Column(name = "amount", precision = 12, scale = 2, nullable = false)
     private BigDecimal amount;
 
     @Column(name = "created_at")

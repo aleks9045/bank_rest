@@ -7,6 +7,7 @@ servers:
   - url: http://127.0.0.1:8080/api/v1
 
 tags:
+  - name: Me
   - name: Auth
   - name: User
   - name: Card
@@ -157,8 +158,9 @@ paths:
           $ref: '#/components/responses/NotFoundError'
   /user/me:
     get:
+      summary: Get user's info
       tags:
-        - User
+        - Me
       operationId: getMe
       responses:
         '200':
@@ -169,10 +171,11 @@ paths:
                 $ref: '#/components/schemas/UserView'
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /user/cards:
+  /user/me/cards:
     get:
+      summary: Get user's list of cards
       tags:
-        - User
+        - Me
       parameters:
         - $ref: '#/components/parameters/pageParam'
         - $ref: '#/components/parameters/sizeParam'
@@ -186,7 +189,7 @@ paths:
       operationId: getMyCards
       responses:
         '200':
-          description: User data
+          description: Cards data
           content:
             application/json:
               schema:
@@ -195,6 +198,40 @@ paths:
                   $ref: '#/components/schemas/CardUserView'
         '404':
           $ref: '#/components/responses/NotFoundError'
+  /user/me/transactions:
+    get:
+      summary: Get user's list of transactions
+      tags:
+        - Me
+      operationId: getMyTransactions
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/sizeParam'
+        - $ref: '#/components/parameters/sortParam'
+        - name: sender_card_id
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/id'
+          description: Filter by sender card
+        - name: receiver_card_id
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/id'
+          description: Filter by receiver card
+      responses:
+        '200':
+          description: List of transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionView'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
   /cards:
     get:
       summary: Get list of cards
@@ -209,8 +246,7 @@ paths:
           in: query
           required: false
           schema:
-            type: string
-            format: uuid
+            $ref: '#/components/schemas/uuid'
           description: Filter by owner user UUID
         - name: status
           in: query
@@ -337,6 +373,91 @@ paths:
         '404':
           $ref: '#/components/responses/NotFoundError'
 
+  /transactions:
+    get:
+      summary: Get list of transactions
+      tags:
+        - Transaction
+      operationId: getTransactions
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/sizeParam'
+        - $ref: '#/components/parameters/sortParam'
+        - name: sender_card_id
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/id'
+          description: Filter by sender card
+        - name: receiver_card_id
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/id'
+          description: Filter by receiver card
+        - name: sender_uuid
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: receiver_uuid
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: List of transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionView'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+
+    post:
+      summary: Create a new transaction
+      tags:
+        - Transaction
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreate'
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionView'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /transaction/{id}:
+    get:
+      summary: Get transaction by ID
+      tags:
+        - Transaction
+      operationId: getTransaction
+      parameters:
+        - $ref: '#/components/parameters/idParamInPath'
+          description: Transaction ID
+      responses:
+        '200':
+          description: Transaction data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionView'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
 
 components:
   securitySchemes:
@@ -568,7 +689,7 @@ components:
       properties:
         balance:
           type: number
-          format: decimal
+          
           minimum: 0
           example: 1500.75
           description: Card balance
@@ -632,6 +753,52 @@ components:
         - ACTIVE
         - BLOCKED
         - EXPIRED
+    
+    TransactionBase:
+      type: object
+      properties:
+        from_card_id:
+          $ref: '#/components/schemas/id'
+        to_card_id:
+          $ref: '#/components/schemas/id'
+        amount:
+          type: number
+          
+          minimum: 0.01
+          example: 250.75
+          description: Transfer amount
+
+    TransactionCreate:
+      allOf:
+        - $ref: '#/components/schemas/TransactionBase'
+        - type: object
+          required:
+            - from_card_id
+            - to_card_id
+            - amount
+          properties:
+            from_card_id:
+              $ref: '#/components/schemas/TransactionBase/properties/from_card_id'
+            to_card_id:
+              $ref: '#/components/schemas/TransactionBase/properties/to_card_id'
+            amount:
+              $ref: '#/components/schemas/TransactionBase/properties/amount'
+
+    TransactionView:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        from_card_id:
+          $ref: '#/components/schemas/id'
+        to_card_id:
+          $ref: '#/components/schemas/id'
+        amount:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+          description: Transaction timestamp
 
     id:
       type: integer

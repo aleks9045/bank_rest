@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Enumeration for every error linked with auth
  *
- * @author Aleksey
+
  */
 @Getter
 @RequiredArgsConstructor

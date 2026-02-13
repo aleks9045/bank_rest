@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  *
  * Generates standardized responses using {@link ApiErrorDto}
  *
- * @author Aleksey
+
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
                                                               HttpServletRequest request) {
         var httpStatus = ex.getHttpStatus();
 
-        var apiError = new ApiErrorDto();
+        var apiError = ApiError.buildApiErrorDto(httpStatus, ex, request);
 
         return ResponseEntity.status(httpStatus).body(apiError);
     }

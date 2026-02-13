@@ -52,7 +52,7 @@ public class User implements UserDetails, HasTimestamps {
     @NotNull
     private String lastName;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private UserRole role;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, orphanRemoval = true)
