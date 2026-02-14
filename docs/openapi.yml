@@ -260,6 +260,18 @@ paths:
           schema:
             type: boolean
           description: Filter by card status
+        - name: balance_min
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Filter by balance
+        - name: balance_max
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Filter by balance
       responses:
         '200':
           description: List of cards retrieved successfully
@@ -437,6 +449,16 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/uuid'
+        - name: amount_min
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: amount_max
+          in: query
+          required: false
+          schema:
+            type: number
       responses:
         '200':
           description: List of transactions retrieved successfully

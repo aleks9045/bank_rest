@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,10 +65,18 @@ public class CardController implements CardApi {
                                                            String sort,
                                                            UUID userUuid,
                                                            CardStatusDto status,
-                                                           Boolean needToBlock) {
+                                                           Boolean needToBlock,
+                                                           BigDecimal balanceMin,
+                                                           BigDecimal balanceMax) {
 
         var pageable = PageableFactory.getPageable(page, size, sort);
-        var cardFilter = new CardFilter(userUuid, status, needToBlock);
+        var cardFilter = new CardFilter(
+            userUuid,
+            status,
+            needToBlock,
+            balanceMin,
+            balanceMax
+        );
 
         var cards = cardService.getCards(cardFilter, pageable);
         return ResponseEntity.ok(cards);

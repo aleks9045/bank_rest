@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,13 +52,17 @@ public class TransactionController implements TransactionApi {
                                                                     Long senderCardId,
                                                                     Long receiverCardId,
                                                                     UUID senderUuid,
-                                                                    UUID receiverUuid) {
+                                                                    UUID receiverUuid,
+                                                                    BigDecimal amountMin,
+                                                                    BigDecimal amountMax) {
         var pageable = PageableFactory.getPageable(page, size, sort);
         var transactionFilter = new TransactionFilter(
             senderCardId,
             receiverCardId,
             senderUuid,
-            receiverUuid
+            receiverUuid,
+            amountMin,
+            amountMax
         );
 
         var transactions = transactionService.getTransactions(transactionFilter, pageable);

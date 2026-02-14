@@ -19,7 +19,9 @@ public class CardSpecificationBuilder extends JpaSpecificationBuilder<Card> {
         return Specification.<Card>unrestricted()
             .and(this.joinEqual(Card_.OWNER, JoinType.INNER, User_.UUID, filter.getUserUuid()))
             .and(this.equal(Card_.STATUS, filter.getStatus()))
-            .and(this.equal(Card_.NEED_TO_BLOCK, filter.getCardBlock()));
+            .and(this.equal(Card_.NEED_TO_BLOCK, filter.getCardBlock()))
+            .and(this.greaterThan(Card_.BALANCE, filter.getBalanceMin()))
+            .and(this.lessThan(Card_.BALANCE, filter.getBalanceMax()));
     }
 
 }

@@ -21,6 +21,8 @@ public class TransactionSpecificationBuilder extends JpaSpecificationBuilder<Tra
     public Specification<Transaction> build(TransactionFilter filter) {
 
         return Specification.<Transaction>unrestricted()
+            .and(this.greaterThan(Transaction_.AMOUNT, filter.getAmountMin()))
+            .and(this.lessThan(Transaction_.AMOUNT, filter.getAmountMax()))
             .and(this.joinEqual(Transaction_.FROM_CARD, JoinType.INNER, Card_.ID, filter.getFromCardId()))
             .and(this.joinEqual(Transaction_.TO_CARD, JoinType.INNER, Card_.ID, filter.getToCardId()))
             .and(this.nestedJoinEqual(List.of(Transaction_.TO_CARD, Card_.OWNER), User_.UUID, filter.getSenderUuid()))

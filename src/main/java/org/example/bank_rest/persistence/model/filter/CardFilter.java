@@ -4,6 +4,7 @@ package org.example.bank_rest.persistence.model.filter;
 import lombok.*;
 import org.example.bank_rest.dto.CardStatusDto;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Builder
@@ -15,4 +16,6 @@ public class CardFilter {
     private UUID userUuid;
     private CardStatusDto status;
     private Boolean cardBlock;
+    private BigDecimal balanceMin;
+    private BigDecimal balanceMax;
 }

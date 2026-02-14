@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-alpine
 
 WORKDIR /app
 
-COPY /target/tcrm-1.0.0.jar ./app.jar
+COPY /build/libs/bank_rest-1.0.0.jar ./app.jar
 
 RUN apk add --no-cache curl
 
