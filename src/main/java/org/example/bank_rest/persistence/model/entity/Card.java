@@ -48,9 +48,8 @@ public class Card implements HasTimestamps{
     @Enumerated(EnumType.ORDINAL)
     private CardStatus status = CardStatus.ACTIVE;
 
-    @Column(name = "wished_status")
-    @Enumerated(EnumType.ORDINAL)
-    private CardStatus wishedStatus;
+    @Column(name = "need_to_block")
+    private Boolean needToBlock;
 
     @Column(name = "last4", length = 4, nullable = false)
     private String last4;

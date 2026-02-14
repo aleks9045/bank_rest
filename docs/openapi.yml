@@ -156,7 +156,7 @@ paths:
           description: User deleted successfully
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /user/me:
+  /me:
     get:
       summary: Get user's info
       tags:
@@ -171,7 +171,7 @@ paths:
                 $ref: '#/components/schemas/UserView'
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /user/me/cards:
+  /me/cards:
     get:
       summary: Get user's list of cards
       tags:
@@ -198,7 +198,7 @@ paths:
                   $ref: '#/components/schemas/CardUserView'
         '404':
           $ref: '#/components/responses/NotFoundError'
-  /user/me/transactions:
+  /me/transactions:
     get:
       summary: Get user's list of transactions
       tags:
@@ -254,6 +254,12 @@ paths:
           schema:
             $ref: '#/components/schemas/CardStatus'
           description: Filter by card status
+        - name: need_to_block
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filter by card status
       responses:
         '200':
           description: List of cards retrieved successfully
@@ -266,7 +272,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestError'
 
-  /user/{uuid}/cards:
+  /user/{uuid}/card:
     post:
       summary: Create a new card for user
       tags:
@@ -332,7 +338,6 @@ paths:
                 $ref: '#/components/schemas/CardAdminView'
         '404':
           $ref: '#/components/responses/NotFoundError'
-
     patch:
       summary: Patch card by ID
       tags:
@@ -370,6 +375,33 @@ paths:
       responses:
         '204':
           description: Card deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /card/{id}/need_block:
+    patch:
+      summary: Send application to block card
+      tags:
+        - Card
+      operationId: needBlockCard
+      parameters:
+        - $ref: '#/components/parameters/idParamInPath'
+          description: Card ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardBlock'
+      responses:
+        '200':
+          description: Application sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardUserView'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
         '404':
           $ref: '#/components/responses/NotFoundError'
 
@@ -689,7 +721,6 @@ components:
       properties:
         balance:
           type: number
-          
           minimum: 0
           example: 1500.75
           description: Card balance
@@ -733,6 +764,9 @@ components:
               $ref: '#/components/schemas/id'
             owner:
               $ref: '#/components/schemas/UserView'
+            need_to_block:
+              type: boolean
+              example: false
     CardUserView:
       allOf:
         - $ref: '#/components/schemas/TimeData'
@@ -741,12 +775,25 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/id'
+            need_to_block:
+              type: boolean
+              example: false
     CardPatch:
       allOf:
         - $ref: '#/components/schemas/CardBase'
         - type: object
           description: All fields optional for partial update
-
+          properties:
+            need_to_block:
+              type: boolean
+              example: false
+    CardBlock:
+      allOf:
+        - type: object
+          properties:
+            need_to_block:
+              type: boolean
+              example: false
     CardStatus:
       type: string
       enum:
@@ -763,7 +810,6 @@ components:
           $ref: '#/components/schemas/id'
         amount:
           type: number
-          
           minimum: 0.01
           example: 250.75
           description: Transfer amount

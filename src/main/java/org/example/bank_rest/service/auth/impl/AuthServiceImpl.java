@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Authenticate and Authorize Service
- *
-
  */
 @Component
 @RequiredArgsConstructor
@@ -37,8 +35,8 @@ public class AuthServiceImpl implements AuthService {
         var user = authValidator.validateUserLoginDtoAndGetUser(userLoginDto);
 
         return new JwtTokensDto(
-                jwtTokenManager.generateAccessToken(user.getUuid().toString(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()),
-                jwtTokenManager.generateRefreshToken(user.getUuid().toString())
+            jwtTokenManager.generateAccessToken(user.getUuid().toString(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()),
+            jwtTokenManager.generateRefreshToken(user.getUuid().toString())
         );
     }
 

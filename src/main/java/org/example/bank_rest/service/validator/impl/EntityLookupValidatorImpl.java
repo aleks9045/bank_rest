@@ -1,9 +1,7 @@
 package org.example.bank_rest.service.validator.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bank_rest.exception.RequestException;
 import org.example.bank_rest.exception.RequestExceptionBuilder;
-import org.example.bank_rest.exception.enums.NotFoundError;
 import org.example.bank_rest.service.validator.EntityLookupValidator;
 import org.springframework.data.jpa.repository.JpaRepository;
 

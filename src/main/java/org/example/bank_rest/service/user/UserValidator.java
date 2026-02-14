@@ -1,7 +1,6 @@
 
 package org.example.bank_rest.service.user;
 
-import org.example.bank_rest.exception.RequestException;
 import org.example.bank_rest.exception.RequestExceptionBuilder;
 import org.example.bank_rest.exception.enums.NotFoundError;
 import org.example.bank_rest.persistence.model.entity.User;

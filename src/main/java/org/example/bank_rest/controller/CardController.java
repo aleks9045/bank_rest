@@ -63,10 +63,11 @@ public class CardController implements CardApi {
                                                            Integer size,
                                                            String sort,
                                                            UUID userUuid,
-                                                           CardStatusDto status) {
+                                                           CardStatusDto status,
+                                                           Boolean needToBlock) {
 
         var pageable = PageableFactory.getPageable(page, size, sort);
-        var cardFilter = new CardFilter(userUuid, status);
+        var cardFilter = new CardFilter(userUuid, status, needToBlock);
 
         var cards = cardService.getCards(cardFilter, pageable);
         return ResponseEntity.ok(cards);
@@ -78,5 +79,13 @@ public class CardController implements CardApi {
     public ResponseEntity<CardAdminViewDto> patchCard(Long id, CardPatchDto cardPatchDto) {
         var cardViewDto = cardService.patchCard(id, cardPatchDto);
         return ResponseEntity.ok(cardViewDto);
+    }
+
+    @Override
+    public ResponseEntity<CardUserViewDto> needBlockCard(Long id,
+                                                         CardBlockDto cardBlockDto) {
+        var dto = cardService.needToBlock(id, cardBlockDto);
+
+        return ResponseEntity.ok(dto);
     }
 }

@@ -1,10 +1,7 @@
 package org.example.bank_rest.service.card;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bank_rest.dto.CardAdminViewDto;
-import org.example.bank_rest.dto.CardCreateDto;
-import org.example.bank_rest.dto.CardPatchDto;
-import org.example.bank_rest.dto.CardUserViewDto;
+import org.example.bank_rest.dto.*;
 import org.example.bank_rest.mapper.CardMapper;
 import org.example.bank_rest.persistence.model.filter.CardFilter;
 import org.example.bank_rest.persistence.repository.CardRepository;
@@ -12,11 +9,14 @@ import org.example.bank_rest.persistence.specificationBuilder.CardSpecificationB
 import org.example.bank_rest.service.user.UserValidator;
 import org.example.bank_rest.util.CardPanGenerator;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 
 @Service
@@ -89,6 +89,18 @@ public class CardService {
 
     public void deleteCardById(Long id) {
         cardRepository.deleteById(id);
+    }
+
+    @Transactional
+    public CardUserViewDto needToBlock(Long id, CardBlockDto dto) {
+        var user = userValidator.getUserFromSecurityContext();
+        var card = cardValidator.getCardWithOwner(id);
+        if (isFalse(card.getOwner().getUuid().equals(user.getUuid()))){
+            throw new AccessDeniedException("Access Denied");
+        }
+        card.setNeedToBlock(dto.getNeedToBlock());
+
+        return cardMapper.toUserDto(card);
     }
 
 }

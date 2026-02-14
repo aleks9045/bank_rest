@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -27,21 +28,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class UsersControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private MeService meService;
-    @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private CustomAuthFilter authFilter;
 
     @MockitoBean
     private CardService cardService;
-
-    @MockitoBean
-    private CustomAuthFilter customAuthFilter;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -81,44 +79,6 @@ class UsersControllerTest {
             .andExpect(jsonPath("$.password").doesNotExist());
 
         verify(userService).getUser(UUID_VALUE);
-    }
-
-    @Test
-    void getMe_shouldReturn200_andUser() throws Exception {
-
-        var userView = new UserViewDto();
-        userView.setEmail("me@mail.com");
-        userView.setFirstName("me");
-
-        when(meService.getMe()).thenReturn(userView);
-
-        mockMvc.perform(get(BASE_URL + "me"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value("me@mail.com"));
-
-        verify(meService).getMe();
-    }
-
-
-    @Test
-    void getMyCards_shouldReturn200_andCards() throws Exception {
-
-        var card = new CardUserViewDto();
-        card.setBalance(BigDecimal.TEN);
-        card.setId(1L);
-
-        var cards = List.of(card);
-
-        when(cardService.getUserCards(any(), any())).thenReturn(cards);
-
-        mockMvc.perform(get(BASE_URL + "cards")
-                .param("page", "0")
-                .param("size", "10"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].balance").value(BigDecimal.TEN.toString()))
-            .andExpect(jsonPath("$[0].id").value("1"));
-
-        verify(cardService).getUserCards(any(), any());
     }
 
 

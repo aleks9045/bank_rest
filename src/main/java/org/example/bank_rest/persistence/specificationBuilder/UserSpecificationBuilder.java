@@ -15,9 +15,9 @@ public class UserSpecificationBuilder extends JpaSpecificationBuilder<User> {
     public Specification<User> build(UserFilter filter) {
 
         return Specification.<User>unrestricted()
-                .and(this.equal(User_.EMAIL, filter.email()))
-                .and(this.equal(User_.FIRST_NAME, filter.firstName()))
-                .and(this.equal(User_.LAST_NAME, filter.lastName()));
+                .and(this.equal(User_.EMAIL, filter.getEmail()))
+                .and(this.equal(User_.FIRST_NAME, filter.getFirstName()))
+                .and(this.equal(User_.LAST_NAME, filter.getLastName()));
     }
 
 }

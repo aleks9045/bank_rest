@@ -1,4 +1,4 @@
-package org.example.bank_rest.mapper;
+package org.example.bank_rest.mapper.helpers;
 
 import org.example.bank_rest.dto.UserRoleDto;
 import org.example.bank_rest.persistence.model.entity.enums.UserRole;

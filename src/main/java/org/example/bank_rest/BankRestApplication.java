@@ -1,6 +1,5 @@
 package org.example.bank_rest;
 
-import org.example.bank_rest.properties.AppProperties;
 import org.example.bank_rest.properties.CorsProperties;
 import org.example.bank_rest.properties.JwtProperties;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
-    AppProperties.class,
     CorsProperties.class,
     JwtProperties.class
 })

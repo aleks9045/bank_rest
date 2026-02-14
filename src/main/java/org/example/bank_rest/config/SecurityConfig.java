@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,7 +31,7 @@ public class SecurityConfig {
     private final LoggingFilter loggingFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
 
         http
             .cors(cors -> cors.configurationSource(request -> corsProperties.getCorsConfiguration()))
@@ -43,11 +42,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
             .anonymous(Customizer.withDefaults())
-
-            .authorizeHttpRequests(request -> request
-                .requestMatchers("/files/**").authenticated()
-                .anyRequest().permitAll()
-            )
 
             .addFilterBefore(customAuthFilter, AnonymousAuthenticationFilter.class)
             .addFilterBefore(loggingFilter, CustomAuthFilter.class);

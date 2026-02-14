@@ -7,7 +7,6 @@ import org.example.bank_rest.mapper.TransactionMapper;
 import org.example.bank_rest.persistence.model.filter.TransactionFilter;
 import org.example.bank_rest.persistence.repository.TransactionRepository;
 import org.example.bank_rest.persistence.specificationBuilder.TransactionSpecificationBuilder;
-import org.example.bank_rest.service.user.UserValidator;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +46,6 @@ public class TransactionService {
         transactionValidator.makeMeansTransfer(dto);
 
         var transaction = transactionMapper.toEntity(dto);
-        System.out.println();
         var saved = transactionRepository.save(transaction);
 
         return transactionMapper.toDto(saved);

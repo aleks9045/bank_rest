@@ -1,10 +1,7 @@
 package org.example.bank_rest.persistence.model.filter;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.example.bank_rest.dto.CardStatusDto;
 
 import java.util.UUID;
@@ -13,7 +10,9 @@ import java.util.UUID;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CardFilter {
     private UUID userUuid;
     private CardStatusDto status;
+    private Boolean cardBlock;
 }

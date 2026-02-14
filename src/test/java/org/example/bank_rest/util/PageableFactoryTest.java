@@ -2,6 +2,7 @@ package org.example.bank_rest.util;
 
 import org.example.bank_rest.testUtil.RandomGenerator;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -26,16 +27,10 @@ public class PageableFactoryTest {
     }
 
     @Test
-    public void testDefaultValues() {
-
-        var defaultPageValue = 0;
-        var defaultPageSizeValue = 20;
+    public void testDefault() {
 
         var pageable = PageableFactory.getPageable(null, null, null);
-
-        assertEquals(pageable.getPageNumber(), defaultPageValue);
-        assertEquals(pageable.getPageSize(), defaultPageSizeValue);
-        assertEquals(pageable.getSort(), Sort.by(Sort.Direction.ASC, "created_at"));
+        assertEquals(pageable, Pageable.unpaged());
     }
 
     @Test
@@ -51,7 +46,7 @@ public class PageableFactoryTest {
         var first = orders.get(0);
         var second = orders.get(1);
 
-        assertEquals("created_at", first.getProperty());
+        assertEquals("createdAt", first.getProperty());
         assertEquals(Sort.Direction.ASC, first.getDirection());
 
         assertEquals("name", second.getProperty());

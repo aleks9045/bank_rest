@@ -12,6 +12,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ class AuthControllerTest {
     @MockitoBean
     private JwtCookieManager authCookieFabric;
     @MockitoBean
-    private CustomAuthFilter customAuthFilter;
+    private CustomAuthFilter authFilter;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -4,6 +4,7 @@ package org.example.bank_rest.mapper;
 import org.example.bank_rest.dto.UserCreateDto;
 import org.example.bank_rest.dto.UserPatchDto;
 import org.example.bank_rest.dto.UserViewDto;
+import org.example.bank_rest.mapper.helpers.UserRoleMapper;
 import org.example.bank_rest.persistence.model.entity.User;
 import org.mapstruct.*;
 

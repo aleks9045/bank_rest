@@ -1,10 +1,14 @@
 package org.example.bank_rest.persistence.model.filter;
 
-import lombok.Builder;
+import lombok.*;
 
 @Builder
-public record UserFilter(
-        String email,
-        String firstName,
-        String lastName
-) { }
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserFilter {
+    private String email;
+    private String firstName;
+    private String lastName;
+}
