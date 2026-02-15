@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_checks
+      author: aleksey
+      changes:
+        - sql:
+            sql:
+              "alter table cards
+                   add constraint cards_balance_check
+                       check (balance >= (0)::numeric);
+  
+               alter table cards
+                   add constraint cards_expiry_month_check
+                       check ((expiry_month >= 1) AND (expiry_month <= 12));
+  
+               alter table cards
+                   add constraint cards_expiry_year_check
+                       check (expiry_year >= 0);
+  
+               alter table cards
+                   add constraint cards_status_check
+                       check ((status >= 0) AND (status <= 2));"
+        - sql:
+            sql:
+              "alter table users
+                   add constraint users_role_check
+                       check ((role >= 0) AND (role <= 1));"

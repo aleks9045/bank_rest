@@ -10,13 +10,13 @@ spring:
     password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
   liquibase:
-    enabled: false
+    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yml
   jpa:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl
     properties:

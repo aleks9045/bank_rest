@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/db.changelog-base.xml
+      file: db/changelog/db.changelog-0.0-base.xml
   - include:
-      file: db/changelog/db.changelog-1.0-insert-admin.yml
+      file: db/changelog/db.changelog-1.0-create-checks.yml
+  - include:
+      file: db/changelog/db.changelog-2.0-insert-admin.yml

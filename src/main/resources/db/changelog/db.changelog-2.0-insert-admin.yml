@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-admin
+      author: aleksey
+      changes:
+        - sql:
+            sql:
+              "INSERT INTO users (
+                   id, 
+                   uuid, 
+                   email, 
+                   first_name, 
+                   last_name, 
+                   password, 
+                   role, 
+                   created_at, 
+                   updated_at
+               ) VALUES (
+                   777,
+                   'de40eacb-7f13-4165-ba80-cf7a65f2e490',
+                   'admin@email.com',
+                   'admin',
+                   'adminov',
+                   '$100801$C6nmCSrdWqVX0vQho/lZow==$RT9f7C7TeEL0L7r29A3jU/bZQOBZJ2BtAmYjN26Qmb0=',
+                   1,
+                   CURRENT_TIMESTAMP,
+                   CURRENT_TIMESTAMP
+               );"
