@@ -9,6 +9,7 @@ import org.example.bank_rest.persistence.repository.TransactionRepository;
 import org.example.bank_rest.persistence.specificationBuilder.TransactionSpecificationBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class TransactionService {
         return transactionMapper.toDto(transaction);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TransactionViewDto saveTransaction(TransactionCreateDto dto) {
 
         transactionValidator.makeMeansTransfer(dto);
